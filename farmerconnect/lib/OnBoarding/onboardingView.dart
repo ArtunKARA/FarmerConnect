@@ -30,7 +30,7 @@ class _OnboardingViewState extends State<OnboardingView> {
             //Skip Button
             TextButton(
                 onPressed: ()=>pageController.jumpToPage(controller.items.length-1),
-                child: const Text("Skip")),
+                child: const Text("Geç", style: TextStyle(color: Color(0xFF2ECC71)),)),
 
             //Indicator
             SmoothPageIndicator(
@@ -49,7 +49,8 @@ class _OnboardingViewState extends State<OnboardingView> {
             TextButton(
                 onPressed: ()=>pageController.nextPage(
                     duration: const Duration(milliseconds: 600), curve: Curves.easeIn),
-                child: const Text("Next")),
+                child: const Text("Sonraki", style: TextStyle(color: Color(0xFF2ECC71)),)
+            ),
 
 
           ],
