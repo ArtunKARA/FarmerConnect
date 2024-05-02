@@ -1,5 +1,5 @@
 
-const connection = require("../service/connection.js");
+const { poolPromise } = require("../service/connection.js");
 
 exports.signup = async (req, res) => {
 
