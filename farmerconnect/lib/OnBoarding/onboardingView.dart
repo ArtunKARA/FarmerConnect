@@ -1,8 +1,8 @@
 import 'package:farmerconnect/OnBoarding/onboardingItems.dart';
+import 'package:farmerconnect/login.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import '../login.dart';
 
 class OnboardingView extends StatefulWidget {
   const OnboardingView({super.key});
@@ -91,7 +91,7 @@ class _OnboardingViewState extends State<OnboardingView> {
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: Color(0xFF2ECC71)
+          color: const Color(0xFF2ECC71)
       ),
       width: MediaQuery.of(context).size.width * .9,
       height: 55,
@@ -103,7 +103,7 @@ class _OnboardingViewState extends State<OnboardingView> {
             //After we press get started button this onboarding value become true
             // same key
             if(!mounted)return;
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Login()));
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const login()));
           },
           child: const Text("Başlayın",style: TextStyle(color: Colors.white),)),
     );
