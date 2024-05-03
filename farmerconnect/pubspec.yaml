@@ -33,6 +33,7 @@ dependencies:
   firebase_core: ^2.30.1
   firebase_auth: ^4.11.0
   firebase_storage: 11.7.4
+  cloud_firestore: ^4.1.7
   # Diğer Firebase eklentilerini buraya ekleyin
 
 

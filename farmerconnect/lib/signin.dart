@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SignIn extends StatelessWidget {
-  const SignIn({Key? key}) : super(key: key);
+  const SignIn({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,7 @@ class SignIn extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    TextField(
+                    const TextField(
                       decoration: InputDecoration(
                         suffixIcon: Icon(Icons.check, color: Colors.grey),
                         label: Text(
@@ -61,7 +61,7 @@ class SignIn extends StatelessWidget {
                         ),
                       ),
                     ),
-                    TextField(
+                    const TextField(
                       decoration: InputDecoration(
                         suffixIcon: Icon(Icons.check, color: Colors.grey),
                         label: Text(
@@ -73,7 +73,7 @@ class SignIn extends StatelessWidget {
                         ),
                       ),
                     ),
-                    TextField(
+                    const TextField(
                       decoration: InputDecoration(
                         suffixIcon: Icon(Icons.check, color: Colors.grey),
                         label: Text(
@@ -88,7 +88,7 @@ class SignIn extends StatelessWidget {
                     TextField(
                       controller: passwordController,
                       obscureText: true,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         suffixIcon: Icon(Icons.visibility_off, color: Colors.grey),
                         label: Text(
                           'Şifre',
@@ -102,7 +102,7 @@ class SignIn extends StatelessWidget {
                     TextField(
                       controller: confirmPasswordController,
                       obscureText: true,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         suffixIcon: Icon(Icons.visibility_off, color: Colors.grey),
                         label: Text(
                           'Şifre Tekrar',
@@ -113,8 +113,8 @@ class SignIn extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10),
-                    SizedBox(height: 70),
+                    const SizedBox(height: 10),
+                    const SizedBox(height: 70),
                     Container(
                       height: 55,
                       width: 300,
@@ -127,7 +127,7 @@ class SignIn extends StatelessWidget {
                           ],
                         ),
                       ),
-                      child: Center(
+                      child: const Center(
                         child: Text(
                           'KAYIT OL',
                           style: TextStyle(
@@ -138,7 +138,7 @@ class SignIn extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: 80),
+                    const SizedBox(height: 80),
                   ],
                 ),
               ),
