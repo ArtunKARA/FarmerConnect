@@ -1,3 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:farmerconnect/farmmer/mainScreenFarmer.dart';
+import 'package:farmerconnect/supplier/mainScreenSupplier.dart';
+import 'package:farmerconnect/veterinarian/mainScreenVeterinarian.dart';
+import 'package:http/http.dart' as http;
+import 'package:farmerconnect/model/userType.dart';
 import 'package:farmerconnect/signin.dart';
 import 'package:farmerconnect/widgets/form_container_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,6 +15,7 @@ import 'firebase_auth_implementation/firebase_auth_services.dart';
 import 'global/toast.dart';
 
 import 'home.dart';
+import 'model/userType.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -74,16 +82,16 @@ class _LoginState extends State<Login> {
                   width: double.infinity,
                   height: 45,
                   decoration:
-                      BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                      color: Colors.green,
-                      ),
+                  BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.green,
+                  ),
                   child: Center(
                       child: _isSigningUp ? CircularProgressIndicator(color: Colors.green,): Text(
-                    "Giriş Yap",
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),
-                  )),
+                        "Giriş Yap",
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      )),
                 ),
               ),
 
@@ -104,7 +112,7 @@ class _LoginState extends State<Login> {
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(builder: (context) => SignIn()),
-                        (route) => false,
+                            (route) => false,
                       );
                     },
                     child: Text(
@@ -123,7 +131,6 @@ class _LoginState extends State<Login> {
   }
 
   void _signIn() async {
-
     setState(() {
       _isSigningUp = true;
     });
@@ -133,14 +140,68 @@ class _LoginState extends State<Login> {
 
     User? user = await _auth.signInWithEmailAndPassword(email, password);
 
-    setState(() {
-      _isSigningUp = false;
+    // Asenkron olarak userType verisini al
+    Future<List<userType>> userTypesFuture = getPostUser(email);
+
+    // userType verisini al, sonra yönlendirme yap
+    userTypesFuture.then((userTypes) {
+      setState(() {
+        _isSigningUp = false;
+      });
+
+      if (user != null) {
+        showToast(message: "User is successfully logged in");
+        if(userTypes.isNotEmpty){
+          String userType = userTypes[0].userTypes;
+          if(userType == "f"){
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => mainScreenFarmer()),
+            );
+          } else if(userType == "s"){
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => mainScreenSupplier()),
+            );
+          } else if(userType == "v"){
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => mainScreenVeterinarian()),
+            );
+          } else {
+            showToast(message: "User type is not recognized");
+          }
+        } else {
+          showToast(message: "User type is not found");
+        }
+      } else {
+        showToast(message: "Some error happened");
+      }
+    }).catchError((error){
+      setState(() {
+        _isSigningUp = false;
+      });
+      showToast(message: error.toString());
     });
-    if (user != null) {
-      showToast(message: "User is successfully logged in");
-      Navigator.pushNamed(context, "/home");
-    } else {
-      showToast(message: "Some error happened");
+  }
+
+
+  Future<List<userType>> getPostUser(mail) async {
+    try {
+      final response = await http
+          .get(Uri.parse("https://farmerconnect.azurewebsites.net/api/user/type/"+ mail));
+      final body = json.decode(response.body) as List;
+
+      if (response.statusCode == 200) {
+        return body.map((e) {
+          final map = e as Map<String, dynamic>;
+          return userType(
+              userTypes: map["userType"]);
+        }).toList();
+      }
+    } on SocketException {
+      throw Exception("Network Connectivity Error");
     }
+    throw Exception("Fetch Data Error");
   }
 }
