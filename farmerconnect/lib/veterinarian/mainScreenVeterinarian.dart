@@ -3,8 +3,8 @@ import 'package:farmerconnect/user/user.dart';
 import 'package:flutter/material.dart';
 
 
-class mainScreenFarmer extends StatelessWidget {
-  const mainScreenFarmer({Key? key}) : super(key: key);
+class mainScreenVeterinarian extends StatelessWidget {
+  const mainScreenVeterinarian({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
