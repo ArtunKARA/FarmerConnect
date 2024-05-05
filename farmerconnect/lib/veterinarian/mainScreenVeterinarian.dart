@@ -44,7 +44,7 @@ class mainScreenVeterinarian extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xff2ECC71),
+        backgroundColor: const Color(0xFFD2B48C),
         title: const Text(
           'FarmerConnect',
           style: TextStyle(color: Colors.white),
