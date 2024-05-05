@@ -81,7 +81,7 @@ class mainScreenFarmer extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-               Card(
+              Card(
                 child: Column(
                   children: <Widget>[
                     const ListTile(

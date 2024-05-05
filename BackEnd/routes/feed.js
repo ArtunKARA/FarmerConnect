@@ -13,7 +13,7 @@ const {
 } = require("../controllers/feed-controller.js");
 
 router.get("/type", getFeedType);
-router.post("/farmer", getFarmerFeedData);
+router.get("/farmer/:mail", getFarmerFeedData);
 router.post("/supplier", getSupplierFeedData);
 router.get("/details", getFeedDataDetails);
 router.post("/farmer/request", setFarmerFeedRequest);

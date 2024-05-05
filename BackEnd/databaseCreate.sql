@@ -95,4 +95,34 @@ VALUES (1, N'Yonca', 10.00),
 
 INSERT INTO Users (ID, userName, mail, password, userType, name, surname, telno, farmName, farmAdres, area)
 VALUES 
-(1, 'arkara', 'artun@email.com', '123456', 'f', 'Artun', 'Kara', '5551234567', 'Artunun Çiftliği', 'Kocaeli, Türkiye', 'm');
+(1, 'arkara', 'artun@email.com', '123456', 'f', 'Artun', 'Kara', '5551234567', 'Artunun Çiftliği', 'Kocaeli, Türkiye', 'm'),
+(2, 'ekayhan', 'emirhan@email.com', '123456', 's', 'Emirhan', 'Kayhan', '5535061234', 'Kayhanlar A.Ş.', 'Kocaeli, Türkiye', 'm'),
+(3, 'bfahri', 'baris@email.com', '123456', 'v', 'Barış Fahri', 'Kahrıman', '5456793456', 'Veteriner Barış', 'Kocaeli, Türkiye', 'm');
+
+
+INSERT INTO feedRequests (ID, userID, feedTypeID, amount, status, requestResponsible, requestDate, deliveryDate)
+VALUES 
+(1, 1, 1, 100, 'r', NULL, '2024-05-05', NULL),
+(2, 1, 3, 50, 's', 2, '2024-05-03', '2024-06-04'),
+(3, 1, 2, 75, 'r', NULL, '2024-05-04', NULL),
+(4, 1, 5, 200, 'r', NULL, '2024-05-03', NULL),
+(5, 1, 4, 30, 'd', 2, '2024-05-04', '2024-05-05'),
+(6, 1, 3, 30, 'c', 2, '2024-05-04', NULL);
+
+INSERT INTO medicineRequests (ID, userID, medicineTypeID, amount, status, requestResponsible, requestDate, deliveryDate)
+VALUES 
+(1, 1, 1, 5, 'r', NULL, '2024-05-05', NULL),
+(2, 1, 3, 10, 's', 2, '2024-05-03', '2024-06-04'),
+(3, 1, 2, 15, 's', 2, '2024-05-04', '2024-06-12'),
+(4, 1, 5, 20, 'r', NULL, '2024-05-03', NULL),
+(5, 1, 7, 8, 'd', 2, '2024-05-04', '2024-05-05'),
+(6, 1, 9, 12, 'c', 2, '2024-05-05', NULL);
+
+INSERT INTO veterinarianRequests (ID, userID, status, diagnosis, situation, requestResponsible, requestDate)
+VALUES 
+(1, 1, 'a', NULL, 'e', NULL, '2024-05-05'),
+(2, 1, 'a', NULL, 'n', NULL, '2024-05-05'),
+(3, 1, 'p', 'Kuduz Aşısı', 'e', 3, '2024-05-03'),
+(4, 1, 'p', 'Parazit Temizliği', 'n', 3, '2024-05-04'),
+(5, 1, 'p', 'Kulak Enfeksiyonu', 'n', 3, '2024-05-03'),
+(6, 1, 'p', 'Yaralanma', 'e', 3, '2024-05-04');

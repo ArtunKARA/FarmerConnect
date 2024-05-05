@@ -1,94 +1,128 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:farmerconnect/model/userDatas.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';import 'package:http/http.dart' as http;
+
+import '../firebase_auth_implementation/firebase_auth_services.dart';
 
 class userDetails extends StatelessWidget {
   const userDetails({Key? key}) : super(key: key);
+
+  // API'den kullanıcı bilgilerini alacak olan fonksiyon
+  Future<userDatas?> getPost() async {
+    try {
+      var email = FirebaseAuth.instance.currentUser!.email;
+      final response = await http.get(Uri.parse("https://farmerconnect.azurewebsites.net/api/user/userData/"+ email!));
+      final body = json.decode(response.body) as List;
+
+      if (response.statusCode == 200) {
+        // İlk kullanıcıyı döndür
+        if (body.isNotEmpty) {
+          final map = body.first as Map<String, dynamic>;
+          return userDatas(
+              ID: map["ID"],
+              userName: map['userName'],
+              mail: map["mail"],
+              password: map["password"],
+              userType: map["userType"],
+              name: map["name"],
+              surname: map["surname"],
+              telno: map["telno"],
+              farmName: map["farmName"],
+              farmAdres: map["farmAdres"],
+              area: map["area"]);
+        }
+      }
+    } on SocketException {
+      throw Exception("Network Connectivity Error");
+    }
+    throw Exception("Fetch Data Error");
+  }
+
+  void getsend() async {
+    try {
+      final response = await http.get(Uri.parse("https://farmerconnect.azurewebsites.net/api/user/userData"));
+      final body = json.decode(response.body) as List;
+
+      if (response.statusCode == 200) {
+        // İlk kullanıcıyı döndür
+        if (body.isNotEmpty) {
+          final map = body.first as Map<String, dynamic>;
+        }
+      }
+    } on SocketException {
+      throw Exception("Network Connectivity Error");
+    }
+    throw Exception("Fetch Data Error");
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Kulanıcı Bilgileri Güncelle'),
+        title: Text('Kullanıcı Bilgileri Güncelle'),
       ),
-      body:  SingleChildScrollView(
+      body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("İsim"),
-                      TextField(),
-                    ],
-                  ),
-                ),
-                SizedBox(width: 8.0),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Soyisim"),
-                      TextField(),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 16.0),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Kurum"),
-                TextField(),
-              ],
-            ),
-            SizedBox(height: 16.0),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Adres"),
-                TextFormField(
-                  maxLines: 5,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 16.0),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Telefon Numarası"),
-                TextField(),
-              ],
-            ),
-            SizedBox(height: 16.0),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("E-posta"),
-                TextField(),
-              ],
-            ),
-            SizedBox(height: 16.0),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                textStyle: TextStyle(fontSize: 18.0),
-              ),
-              onPressed: () {
-                // Butona basıldığında yapılacak işlemler
-              },
-              child: Text("Kaydet",
-                  style: TextStyle(color: Colors.white)
-              ),
-            ),
-          ],
+        child: FutureBuilder<userDatas?>(
+          future: getPost(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else {
+              if (snapshot.hasError) {
+                return Center(child: Text('Hata oluştu: ${snapshot.error}'));
+              } else {
+                final user = snapshot.data;
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    TextField(
+                      controller: TextEditingController(text: user?.name ?? ''),
+                      decoration: InputDecoration(labelText: 'İsim'),
+                    ),
+                    SizedBox(height: 16.0),
+                    TextField(
+                      controller: TextEditingController(text: user?.surname ?? ''),
+                      decoration: InputDecoration(labelText: 'Soyisim'),
+                    ),
+                    SizedBox(height: 16.0),
+                    TextField(
+                      controller: TextEditingController(text: user?.farmName ?? ''),
+                      decoration: InputDecoration(labelText: 'Kurum'),
+                    ),
+                    SizedBox(height: 16.0),
+                    TextFormField(
+                      maxLines: 5,
+                      controller: TextEditingController(text: user?.farmAdres ?? ''),
+                      decoration: InputDecoration(labelText: 'Adres', border: OutlineInputBorder()),
+                    ),
+                    SizedBox(height: 16.0),
+                    TextField(
+                      controller: TextEditingController(text: user?.telno ?? ''),
+                      decoration: InputDecoration(labelText: 'Telefon Numarası'),
+                    ),
+                    SizedBox(height: 16.0),
+                    TextField(
+                      controller: TextEditingController(text: user?.mail ?? ''),
+                      decoration: InputDecoration(labelText: 'E-posta'),
+                    ),
+                    SizedBox(height: 16.0),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Kaydet butonuna basıldığında yapılacak işlemler
+                      },
+                      child: Text('Kaydet'),
+                    ),
+                  ],
+                );
+              }
+            }
+          },
         ),
       ),
       resizeToAvoidBottomInset: true, // Klavye açıldığında ekranı otomatik olarak yukarı kaydırır
