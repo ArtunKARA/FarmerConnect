@@ -6,14 +6,14 @@ import 'dart:convert';
 
 import 'package:farmerconnect/farmmer/feed/feedRequest.dart';
 
-List<feedRequests> dropdownItemsModelFromJson(String str) =>
-    List<feedRequests>.from(
-        json.decode(str).map((x) => feedRequests.fromJson(x)));
+List<feedRequestsModel> dropdownItemsModelFromJson(String str) =>
+    List<feedRequestsModel>.from(
+        json.decode(str).map((x) => feedRequestsModel.fromJson(x)));
 
-String dropdownItemsModelToJson(List<feedRequests> data) =>
+String dropdownItemsModelToJson(List<feedRequestsModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class feedRequests {
+class feedRequestsModel {
   int TalepID;
   String YemAdi;
   int Miktar;
@@ -21,7 +21,7 @@ class feedRequests {
   String IstekTarihi;
   String? TeslimTarihi;
 
-  feedRequests({
+  feedRequestsModel({
     required this.TalepID,
     required this.YemAdi,
     required this.Miktar,
@@ -30,8 +30,8 @@ class feedRequests {
     this.TeslimTarihi,
   });
 
-  factory feedRequests.fromJson(Map<String, dynamic> json) =>
-      feedRequests(
+  factory feedRequestsModel.fromJson(Map<String, dynamic> json) =>
+      feedRequestsModel(
         TalepID: json["TalepID"],
         YemAdi: json["YemAdı"],
         Miktar: json["Miktar"],

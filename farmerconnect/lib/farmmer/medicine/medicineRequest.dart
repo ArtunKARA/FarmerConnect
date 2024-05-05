@@ -137,7 +137,7 @@ class _medicineRequestState extends State<medicineRequest> {
                 // Butona basıldığında yapılacak işlemler
               },
               child: Text("Talep Oluştur",
-              style: TextStyle(color: Colors.white)
+                  style: TextStyle(color: Colors.white)
               ),
             ),
           ],
