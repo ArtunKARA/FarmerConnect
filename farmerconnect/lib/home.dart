@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
                   height: 45,
                   width: 100,
                   decoration: BoxDecoration(
-                      color: Colors.green,
+                      color: Color(0xFF2ECC71),
                       borderRadius: BorderRadius.circular(10)),
                   child: Center(
                     child: Text(
@@ -99,7 +99,7 @@ class _HomePageState extends State<HomePage> {
                   height: 45,
                   width: 100,
                   decoration: BoxDecoration(
-                      color: Colors.green,
+                      color: Color(0xFF2ECC71),
                       borderRadius: BorderRadius.circular(10)),
                   child: Center(
                     child: Text(

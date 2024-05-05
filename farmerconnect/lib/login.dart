@@ -76,10 +76,10 @@ class _LoginState extends State<Login> {
                   decoration:
                       BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                      color: Colors.green,
+                      color: Color(0xFF2ECC71),
                       ),
                   child: Center(
-                      child: _isSigningUp ? CircularProgressIndicator(color: Colors.green,): Text(
+                      child: _isSigningUp ? CircularProgressIndicator(color: Color(0xFF2ECC71),): Text(
                     "Giriş Yap",
                     style: TextStyle(
                         color: Colors.white, fontWeight: FontWeight.bold),
@@ -110,7 +110,7 @@ class _LoginState extends State<Login> {
                     child: Text(
                       "Kayıt Ol",
                       style: TextStyle(
-                          color: Colors.green, fontWeight: FontWeight.bold),
+                          color: Color(0xFF2ECC71), fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
@@ -137,10 +137,10 @@ class _LoginState extends State<Login> {
       _isSigningUp = false;
     });
     if (user != null) {
-      showToast(message: "User is successfully logged in");
+      showToast(message: "Giriş Başarılı");
       Navigator.pushNamed(context, "/home");
     } else {
-      showToast(message: "Some error happened");
+      showToast(message: "Bir Hata Oluştu");
     }
   }
 }
