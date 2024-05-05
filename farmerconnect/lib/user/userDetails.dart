@@ -7,7 +7,7 @@ class userDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Kulanıcı Bilgileri Güncelle'),
+        title: Text('Kullanıcı Bilgilerimi Güncelle'),
       ),
       body:  SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
@@ -78,7 +78,7 @@ class userDetails extends StatelessWidget {
             SizedBox(height: 16.0),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
+                backgroundColor: Color(0xFF2ECC71),
                 textStyle: TextStyle(fontSize: 18.0),
               ),
               onPressed: () {

@@ -1,5 +1,8 @@
 import 'package:farmerconnect/user/userDetails.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../global/toast.dart';
 
 class user extends StatelessWidget {
   const user({Key? key}) : super(key: key);
@@ -80,7 +83,7 @@ class user extends StatelessWidget {
             Center(
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
+                  backgroundColor: Color(0xFF2ECC71),
                   textStyle: TextStyle(fontSize: 18.0),
                 ),
                 onPressed: () {
@@ -91,6 +94,23 @@ class user extends StatelessWidget {
                   );
                 },
                 child: Text("Bilgilerimi Güncelle",
+                    style: TextStyle(color: Colors.white)
+                ),
+              ),
+            ),
+            SizedBox(height: 16.0),
+            Center(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  textStyle: TextStyle(fontSize: 18.0),
+                ),
+                onPressed: () {
+                  FirebaseAuth.instance.signOut();
+                  Navigator.pushNamed(context, "/login");
+                  showToast(message: "Çıkış yapıldı");
+                },
+                child: Text("Çıkış Yap",
                     style: TextStyle(color: Colors.white)
                 ),
               ),

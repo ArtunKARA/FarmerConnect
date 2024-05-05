@@ -3,6 +3,7 @@ import 'package:farmerconnect/user/user.dart';
 import 'package:flutter/material.dart';
 
 import 'feed/feedRequest.dart';
+import 'feed/feedRequests.dart';
 import 'medicine/medicineRequest.dart';
 
 class mainScreenFarmer extends StatelessWidget {
@@ -46,6 +47,8 @@ class mainScreenFarmer extends StatelessWidget {
               ),
             ),
             ListTile(
+              leading: Icon(Icons.rice_bowl), // Yonca ikonu eklendi
+
               title: const Text('Yem Talebi Oluştur'),
               onTap: (){
                 Navigator.push(
@@ -55,6 +58,8 @@ class mainScreenFarmer extends StatelessWidget {
               },
             ),
             ListTile(
+              leading: Icon(Icons.medical_information), // Yonca ikonu eklendi
+
               title: const Text('Veteriner Çağır'),
               onTap: (){
                 Navigator.push(
@@ -64,6 +69,8 @@ class mainScreenFarmer extends StatelessWidget {
               },
             ),
             ListTile(
+              leading: Icon(Icons.vaccines), // Yonca ikonu eklendi
+
               title: const Text('İlaç Sipariş Et'),
               onTap: (){
                 Navigator.push(
@@ -81,14 +88,22 @@ class mainScreenFarmer extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-               Card(
+              Card(
                 child: Column(
                   children: <Widget>[
-                    const ListTile(
+                    ListTile(
                       title: Text('Yem Tedariklerim'),
                       subtitle: Text('Yem tedariklerim ve talep'),
-                      leading: Icon(Icons.food_bank),
-                      trailing: Icon(Icons.arrow_forward_ios),
+                      leading: Icon(Icons.rice_bowl),
+                      trailing: IconButton(
+                        icon: Icon(Icons.arrow_forward_ios),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => feedRequests()),
+                          );
+                        },
+                      ),
                     ),
                     DataTable(
                       columns: const <DataColumn>[
@@ -137,6 +152,7 @@ class mainScreenFarmer extends StatelessWidget {
                   ],
                 ),
               ),
+
               Card(
                 child: Column(
                   children: <Widget>[
@@ -199,7 +215,7 @@ class mainScreenFarmer extends StatelessWidget {
                     const ListTile(
                       title: Text('İlaç Taleplerim'),
                       subtitle: Text('İlaç talep ve durum'),
-                      leading: Icon(Icons.local_pharmacy),
+                      leading: Icon(Icons.vaccines),
                       trailing: Icon(Icons.arrow_forward_ios),
                     ),
                     DataTable(
