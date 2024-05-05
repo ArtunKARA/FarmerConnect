@@ -17,9 +17,9 @@ router.get("/status", getVeterinarianRequestsStatus);
 router.get("/farmer/:mail", getFarmerVeterinarianData);
 router.post("/veterinarian", getVeterinarianVeterinarianData);
 router.get("/details", getVeterinarianDataDetails);
-router.post("/farmer/request", setFarmerVeterinarianRequest);
-router.post("/veterinarian/request/aproved", setVeterinarianRequestAproved);
-router.post("/veterinarian/request/diagnosis", setVeterinarianRequestDiagnosis);
+router.post("/farmerRequest", setFarmerVeterinarianRequest);
+router.post("/veterinarianRequestAproved", setVeterinarianRequestAproved);
+router.post("/veterinarianRequestDiagnosis", setVeterinarianRequestDiagnosis);
 
 
 module.exports = router;

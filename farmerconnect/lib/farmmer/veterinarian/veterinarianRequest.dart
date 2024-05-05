@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -11,12 +12,11 @@ class veterinarianRequest extends StatefulWidget {
 
 class _ComboBoxPageState extends State<veterinarianRequest> {
 
-  Future<void> postVeterianRequest() async {
+  Future<void> postVeterianRequest(mail,situation) async {
     // Göndermek istediğiniz verileri bir harita olarak oluşturun
     Map<String, dynamic> data = {
-      'name': 'John Doe',
-      'email': 'john@example.com',
-      'age': 30,
+      'mail': mail,
+      'status': situation,
     };
 
     // Verileri JSON formatına dönüştürün
@@ -25,7 +25,7 @@ class _ComboBoxPageState extends State<veterinarianRequest> {
     try {
       // POST isteğini göndermek istediğiniz URL'yi belirtin
       final response = await http.post(
-        Uri.parse('https://example.com/api/postData'),
+        Uri.parse('https://farmerconnect.azurewebsites.net/api/veterinarian/farmerRequest'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -86,9 +86,10 @@ class _ComboBoxPageState extends State<veterinarianRequest> {
             SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: () {
+                var email = FirebaseAuth.instance.currentUser!.email;
                 if (_selectedItem != null) {
                   if(_selectedItem == 'Acil'){
-                    postVeterianRequest();
+                    postVeterianRequest(email,"a");
                     // Acil durumda veteriner çağır
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -96,7 +97,7 @@ class _ComboBoxPageState extends State<veterinarianRequest> {
                       ),
                     );
                   } else {
-                    postVeterianRequest();
+                    postVeterianRequest(email,"n");
                     // Stabil durumda veteriner çağır
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
