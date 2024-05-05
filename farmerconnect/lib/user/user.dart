@@ -13,7 +13,8 @@ class user extends StatelessWidget {
 
   Future<userDatas?> getPost() async {
     try {
-      final response = await http.get(Uri.parse("https://farmerconnect.azurewebsites.net/api/user/userData/artun@email.com"));
+      var email = FirebaseAuth.instance.currentUser!.email;
+      final response = await http.get(Uri.parse("https://farmerconnect.azurewebsites.net/api/user/userData/"+email!));
       final body = json.decode(response.body) as List;
 
       if (response.statusCode == 200) {

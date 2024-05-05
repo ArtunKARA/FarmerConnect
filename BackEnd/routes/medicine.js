@@ -13,7 +13,7 @@ const {
 } = require("../controllers/medicine-controller.js");
 
 router.get("/type", getMedicineType);
-router.post("/farmer", getFarmerMedicineData);
+router.get("/farmer/:mail", getFarmerMedicineData);
 router.post("/supplier", getSupplierMedicineData);
 router.get("/details", getMedicineDataDetails);
 router.post("/farmer/request", setFarmerMedicineRequest);

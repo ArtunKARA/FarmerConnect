@@ -45,7 +45,7 @@ class mainScreenFarmer extends StatelessWidget {
     try {
       var email = FirebaseAuth.instance.currentUser!.email;
       final response = await http
-          .get(Uri.parse("https://farmerconnect.azurewebsites.net/api/feed/farmer/"+ email!));
+          .get(Uri.parse("https://farmerconnect.azurewebsites.net/api/medicine/farmer/"+ email!));
       final body = json.decode(response.body) as List;
 
       if (response.statusCode == 200) {
@@ -70,7 +70,7 @@ class mainScreenFarmer extends StatelessWidget {
     try {
       var email = FirebaseAuth.instance.currentUser!.email;
       final response = await http
-          .get(Uri.parse("https://farmerconnect.azurewebsites.net/api/feed/farmer/"+ email!));
+          .get(Uri.parse("https://farmerconnect.azurewebsites.net/api/veterinarian/farmer/"+ email!));
       final body = json.decode(response.body) as List;
 
       if (response.statusCode == 200) {
@@ -336,8 +336,14 @@ class mainScreenFarmer extends StatelessWidget {
                                 final request = feedRequestsData[index];
                                 return DataRow(
                                   cells: <DataCell>[
-                                    DataCell(Text(request.situation)),
-                                    DataCell(Text(request.status)),
+                                    if(request.situation == "e")
+                                      DataCell(Text("Acil", style: TextStyle(color: Colors.red))
+                                      )
+                                    else if(request.situation == "n")
+                                      DataCell(Text("Stabil", style: TextStyle(color: Colors.green))
+                                      )
+                                        else
+                                          DataCell(Text(request.status)),
                                     if(request.status == "a")
                                       DataCell(Text("Aktif", style: TextStyle(color: Colors.red))
                                       )
