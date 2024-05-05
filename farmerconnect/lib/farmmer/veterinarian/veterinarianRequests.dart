@@ -34,7 +34,9 @@ class veterinarianRequests extends StatelessWidget {
               status: map['status'],
               requestDate: map["requestDate"],
               diagnosis: map["diagnosis"],
-              situation: map["situation"]);
+              situation: map["situation"],
+              farmAdres: map["farmAdres"],
+          );
         }).toList();
       }
     } on SocketException {
