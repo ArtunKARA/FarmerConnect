@@ -178,7 +178,8 @@ class mainScreenFarmer extends StatelessWidget {
                     } else if (snapshot.hasError) {
                       return Text('Hata: ${snapshot.error}');
                     } else {
-                      final feedRequestsData = snapshot.data;
+                      final reversedData = List.from(snapshot.data!.reversed);
+                      final lastFiveRequests = reversedData.length > 5 ? reversedData.sublist(0, 5) : reversedData;
                       return Column(
                         children: <Widget>[
                           ListTile(
@@ -201,9 +202,9 @@ class mainScreenFarmer extends StatelessWidget {
                               DataColumn(label: Text('Durum')),
                             ],
                             rows: List.generate(
-                              feedRequestsData!.length < 5 ? feedRequestsData.length : 5,
+                              lastFiveRequests!.length < 5 ? lastFiveRequests.length : 5,
                                   (index) {
-                                final request = feedRequestsData[index];
+                                final request = lastFiveRequests[index];
                                 return DataRow(
                                   cells: <DataCell>[
                                     DataCell(Text(request.YemAdi)),
@@ -243,7 +244,8 @@ class mainScreenFarmer extends StatelessWidget {
                     } else if (snapshot.hasError) {
                       return Text('Hata: ${snapshot.error}');
                     } else {
-                      final feedRequestsData = snapshot.data;
+                      final reversedData = List.from(snapshot.data!.reversed);
+                      final lastFiveRequests = reversedData.length > 5 ? reversedData.sublist(0, 5) : reversedData;
                       return Column(
                         children: <Widget>[
                           ListTile(
@@ -267,9 +269,9 @@ class mainScreenFarmer extends StatelessWidget {
                               DataColumn(label: Text('Durum')),
                             ],
                             rows: List.generate(
-                              feedRequestsData!.length < 5 ? feedRequestsData.length : 5,
+                              lastFiveRequests!.length < 5 ? lastFiveRequests.length : 5,
                                   (index) {
-                                final request = feedRequestsData[index];
+                                final request = lastFiveRequests[index];
                                 return DataRow(
                                   cells: <DataCell>[
                                     DataCell(Text(request.name)),
@@ -309,7 +311,8 @@ class mainScreenFarmer extends StatelessWidget {
                     } else if (snapshot.hasError) {
                       return Text('Hata: ${snapshot.error}');
                     } else {
-                      final feedRequestsData = snapshot.data;
+                      final reversedData = List.from(snapshot.data!.reversed);
+                      final lastFiveRequests = reversedData.length > 5 ? reversedData.sublist(0, 5) : reversedData;
                       return Column(
                         children: <Widget>[
                           ListTile(
@@ -331,27 +334,23 @@ class mainScreenFarmer extends StatelessWidget {
                               DataColumn(label: Text('Durum')),
                             ],
                             rows: List.generate(
-                              feedRequestsData!.length < 5 ? feedRequestsData.length : 5,
+                              lastFiveRequests.length,
                                   (index) {
-                                final request = feedRequestsData[index];
+                                final request = lastFiveRequests[index];
                                 return DataRow(
                                   cells: <DataCell>[
-                                    if(request.situation == "e")
-                                      DataCell(Text("Acil", style: TextStyle(color: Colors.red))
-                                      )
-                                    else if(request.situation == "n")
-                                      DataCell(Text("Stabil", style: TextStyle(color: Colors.green))
-                                      )
-                                        else
-                                          DataCell(Text(request.status)),
-                                    if(request.status == "a")
-                                      DataCell(Text("Aktif", style: TextStyle(color: Colors.red))
-                                      )
-                                    else if(request.status == "p")
-                                      DataCell(Text("Veteriner Yolda", style: TextStyle(color: Colors.green))
-                                      )
-                                        else
-                                          DataCell(Text(request.status)),
+                                    if (request.situation == "a")
+                                      DataCell(Text("Acil", style: TextStyle(color: Colors.red)))
+                                    else if (request.situation == "n")
+                                      DataCell(Text("Stabil", style: TextStyle(color: Colors.green)))
+                                    else
+                                      DataCell(Text(request.status)),
+                                    if (request.status == "a")
+                                      DataCell(Text("Aktif", style: TextStyle(color: Colors.red)))
+                                    else if (request.status == "p")
+                                      DataCell(Text("Veteriner Yolda", style: TextStyle(color: Colors.green)))
+                                    else
+                                      DataCell(Text(request.status)),
                                   ],
                                 );
                               },
