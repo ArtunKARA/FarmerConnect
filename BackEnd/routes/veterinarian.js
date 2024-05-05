@@ -14,7 +14,7 @@ const {
 
 router.get("/situation", veterinarianRequestsSituation);
 router.get("/status", getVeterinarianRequestsStatus);
-router.post("/farmer", getFarmerVeterinarianData);
+router.get("/farmer/:mail", getFarmerVeterinarianData);
 router.post("/veterinarian", getVeterinarianVeterinarianData);
 router.get("/details", getVeterinarianDataDetails);
 router.post("/farmer/request", setFarmerVeterinarianRequest);
