@@ -1,3 +1,4 @@
+import 'package:farmerconnect/farmmer/mainScreenFarmer.dart';
 import 'package:farmerconnect/farmmer/veterinarian/veterinarianRequest.dart';
 import 'dart:convert';
 import 'dart:io';
@@ -88,9 +89,20 @@ class feedRequests extends StatelessWidget {
               ),
             ),
             ListTile(
+              leading: Icon(Icons.home), // Yonca ikonu eklendi
+
+              title: const Text('Anasayfa'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => mainScreenFarmer()),
+                );
+              },
+            ),
+            ListTile(
               leading: Icon(Icons.rice_bowl), // Yonca ikonu eklendi
 
-              title: const Text('Yem Talebi Oluştur'),
+              title: const Text('Yem Siparişi Ver'),
               onTap: () {
                 Navigator.push(
                   context,
@@ -173,6 +185,32 @@ class feedRequests extends StatelessWidget {
                                     showModalBottomSheet<void>(
                                       context: context,
                                       builder: (BuildContext context) {
+                                        Widget button;
+                                        if (request.Durum == "r") {
+                                          button = ElevatedButton(
+                                            onPressed: () {
+                                              // İptal et butonunun işlevselliği buraya yazılacak
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.red, // Kırmızı renk
+                                            ),
+                                            child: Text('İptal Et', style: TextStyle(color: Colors.white)),
+                                          );
+                                        } else if (request.Durum == "s") {
+                                          button = ElevatedButton(
+                                            onPressed: () {
+                                              // Teslim aldım butonunun işlevselliği buraya yazılacak
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.green, // Yeşil renk
+                                            ),
+                                            child: Text('Teslim Aldım', style: TextStyle(color: Colors.white)),
+                                          );
+                                        } else {
+                                          // İptal et veya teslim aldım butonu olmayacaksa boş bir container döndür
+                                          button = Container();
+                                        }
+
                                         return Container(
                                           padding: const EdgeInsets.all(20.0),
                                           height: 400, // BottomSheet boyutunu artırmak için
@@ -184,32 +222,16 @@ class feedRequests extends StatelessWidget {
                                             children: [
                                               Text(
                                                   'Yem Adı: ${request.YemAdi}'),
-                                              SizedBox(height: 15,),
                                               Text(
                                                   'Miktar: ${request.Miktar}'),
-                                              SizedBox(height: 15,),
-                                              if (request.Durum == "r")
                                               Text(
-                                                  'Durum: Talepte'),
-
-                                              if (request.Durum == "s")
-                                              Text(
-                                                  'Durum: Sipariş Yolda'),
-
-                                              if (request.Durum == "d")
-                                              Text(
-                                                  'Durum: Teslim Edildi'),
-
-                                              if (request.Durum == "c")
-                                              Text(
-                                                  'Durum: İptal Edildi'),
-                                              SizedBox(height: 15,),
+                                                  'Durum: ${request.Durum}'),
                                               Text(
                                                   'Sipariş Tarihi: ${request.IstekTarihi}'),
-                                              SizedBox(height: 15,),
                                               Text(
                                                   'Teslimat Tarihi: ${request.TeslimTarihi ?? "Bekleniyor"}'),
-                                              // Diğer bilgiler buraya eklenebilir...
+                                              SizedBox(height: 10),
+                                              button,
                                             ],
                                           ),
                                         );
@@ -223,7 +245,7 @@ class feedRequests extends StatelessWidget {
                                       DataCell(Text("Talepte",
                                           style: TextStyle(color: Colors.yellow))),
                                     if (request.Durum == "s")
-                                      DataCell(Text("Sipariş Yolda",
+                                      DataCell(Text("Tedarikte",
                                           style: TextStyle(color: Colors.orange))),
                                     if (request.Durum == "d")
                                       DataCell(Text("Teslim Edildi",
