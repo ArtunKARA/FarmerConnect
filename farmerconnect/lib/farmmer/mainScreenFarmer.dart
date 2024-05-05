@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../model/feedRequestsModel.dart';
+import '../model/medicineRequestsModel.dart';
+import '../model/veterinarianRequestsModel.dart';
 import 'feed/feedRequest.dart';
 import 'feed/feedRequests.dart';
 import 'medicine/medicineRequest.dart';
@@ -32,6 +34,54 @@ class mainScreenFarmer extends StatelessWidget {
               Durum: map["Durum"],
               IstekTarihi: map["IstekTarihi"],
               TeslimTarihi: map["TeslimTarihi"]);
+        }).toList();
+      }
+    } on SocketException {
+      throw Exception("Network Connectivity Error");
+    }
+    throw Exception("Fetch Data Error");
+
+  }Future<List<medicineRequestsModel>> getMedicineRequest() async {
+    try {
+      var email = FirebaseAuth.instance.currentUser!.email;
+      final response = await http
+          .get(Uri.parse("https://farmerconnect.azurewebsites.net/api/feed/farmer/"+ email!));
+      final body = json.decode(response.body) as List;
+
+      if (response.statusCode == 200) {
+        return body.map((e) {
+          final map = e as Map<String, dynamic>;
+          return medicineRequestsModel(
+              ID: map["ID"],
+              name: map['name'],
+              amount: map["amount"],
+              status: map["status"],
+              requestDate: map["requestDate"],
+              deliveryDate: map["deliveryDate"]);
+        }).toList();
+      }
+    } on SocketException {
+      throw Exception("Network Connectivity Error");
+    }
+    throw Exception("Fetch Data Error");
+  }
+
+  Future<List<veterinarianRequestsModel>> getVeterinarianRequest() async {
+    try {
+      var email = FirebaseAuth.instance.currentUser!.email;
+      final response = await http
+          .get(Uri.parse("https://farmerconnect.azurewebsites.net/api/feed/farmer/"+ email!));
+      final body = json.decode(response.body) as List;
+
+      if (response.statusCode == 200) {
+        return body.map((e) {
+          final map = e as Map<String, dynamic>;
+          return veterinarianRequestsModel(
+              ID: map["ID"],
+              status: map['status'],
+              requestDate: map["requestDate"],
+              diagnosis: map["diagnosis"],
+              situation: map["situation"]);
         }).toList();
       }
     } on SocketException {
@@ -124,19 +174,15 @@ class mainScreenFarmer extends StatelessWidget {
                   future: getFeedRequest(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      // Veri yükleniyor ise bu kısım çalışır
-                      return CircularProgressIndicator(); // veya bir yükleniyor animasyonu gösterebilirsiniz
+                      return CircularProgressIndicator();
                     } else if (snapshot.hasError) {
-                      // Veri yüklenirken hata oluştu ise bu kısım çalışır
                       return Text('Hata: ${snapshot.error}');
                     } else {
-                      // Veri başarılı bir şekilde alındı ise bu kısım çalışır
                       final feedRequestsData = snapshot.data;
                       return Column(
                         children: <Widget>[
                           ListTile(
-                            title: Text('Yem Tedariklerim'),
-                            subtitle: Text('Yem tedariklerim ve talep'),
+                            title: Text('Yem Siparişlerim'),
                             leading: Icon(Icons.rice_bowl),
                             trailing: IconButton(
                               icon: Icon(Icons.arrow_forward_ios),
@@ -169,13 +215,13 @@ class mainScreenFarmer extends StatelessWidget {
                                       DataCell(Text("Tedarikte", style: TextStyle(color: Colors.orange))
                                       )
                                     else if(request.Durum == "d")
-                                      DataCell(Text("Teslim Edildi", style: TextStyle(color: Colors.green))
-                                      )
+                                        DataCell(Text("Teslim Edildi", style: TextStyle(color: Colors.green))
+                                        )
                                       else if(request.Durum == "c")
                                           DataCell(Text("İptal Edildi", style: TextStyle(color: Colors.red))
                                           )
-                                    else
-                                      DataCell(Text(request.Durum)),
+                                        else
+                                          DataCell(Text(request.Durum)),
                                   ],
                                 );
                               },
@@ -189,115 +235,126 @@ class mainScreenFarmer extends StatelessWidget {
               ),
 
               Card(
-                child: Column(
-                  children: <Widget>[
-                    const ListTile(
-                      title: Text('Veteriner Aksiyonları'),
-                      subtitle: Text('Veteriner aksiyonlarım ve talep'),
-                      leading: Icon(Icons.medical_services),
-                      trailing: Icon(Icons.arrow_forward_ios),
-                    ),
-                    DataTable(
-                      columns: const <DataColumn>[
-                        DataColumn(label: Text('Tür')),
-                        DataColumn(label: Text('Miktar')),
-                        DataColumn(label: Text('Durum')),
-                      ],
-                      rows: const <DataRow>[
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(Text('Row 1')),
-                            DataCell(Text('Row 1')),
-                            DataCell(Text('Row 1')),
-                          ],
-                        ),
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(Text('Row 2')),
-                            DataCell(Text('Row 2')),
-                            DataCell(Text('Row 1')),
-                          ],
-                        ),
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(Text('Row 2')),
-                            DataCell(Text('Row 2')),
-                            DataCell(Text('Row 1')),
-                          ],
-                        ),
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(Text('Row 2')),
-                            DataCell(Text('Row 2')),
-                            DataCell(Text('Row 1')),
-                          ],
-                        ),
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(Text('Row 2')),
-                            DataCell(Text('Row 2')),
-                            DataCell(Text('Row 1')),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
+                child: FutureBuilder<List<medicineRequestsModel>>(
+                  future: getMedicineRequest(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Hata: ${snapshot.error}');
+                    } else {
+                      final feedRequestsData = snapshot.data;
+                      return Column(
+                        children: <Widget>[
+                          ListTile(
+                            title: Text('İlaç Tedariklerim'),
+                            subtitle: Text('Yem tedariklerim ve talep'),
+                            leading: Icon(Icons.rice_bowl),
+                            trailing: IconButton(
+                              icon: Icon(Icons.arrow_forward_ios),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => feedRequests()),
+                                );
+                              },
+                            ),
+                          ),
+                          DataTable(
+                            columns: const <DataColumn>[
+                              DataColumn(label: Text('Tür')),
+                              DataColumn(label: Text('Miktar')),
+                              DataColumn(label: Text('Durum')),
+                            ],
+                            rows: List.generate(
+                              feedRequestsData!.length < 5 ? feedRequestsData.length : 5,
+                                  (index) {
+                                final request = feedRequestsData[index];
+                                return DataRow(
+                                  cells: <DataCell>[
+                                    DataCell(Text(request.name)),
+                                    DataCell(Text(request.amount.toString())),
+                                    if(request.status == "r")
+                                      DataCell(Text("Talepte", style: TextStyle(color: Colors.yellow))
+                                      )
+                                    else if(request.status == "s")
+                                      DataCell(Text("Tedarikte", style: TextStyle(color: Colors.orange))
+                                      )
+                                    else if(request.status == "d")
+                                        DataCell(Text("Teslim Edildi", style: TextStyle(color: Colors.green))
+                                        )
+                                      else if(request.status == "c")
+                                          DataCell(Text("İptal Edildi", style: TextStyle(color: Colors.red))
+                                          )
+                                        else
+                                          DataCell(Text(request.status)),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                  },
                 ),
               ),
+
               Card(
-                child: Column(
-                  children: <Widget>[
-                    const ListTile(
-                      title: Text('İlaç Taleplerim'),
-                      subtitle: Text('İlaç talep ve durum'),
-                      leading: Icon(Icons.vaccines),
-                      trailing: Icon(Icons.arrow_forward_ios),
-                    ),
-                    DataTable(
-                      columns: const <DataColumn>[
-                        DataColumn(label: Text('Tür')),
-                        DataColumn(label: Text('Miktar')),
-                        DataColumn(label: Text('Durum')),
-                      ],
-                      rows: const <DataRow>[
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(Text('Row 1')),
-                            DataCell(Text('Row 1')),
-                            DataCell(Text('Row 1')),
-                          ],
-                        ),
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(Text('Row 2')),
-                            DataCell(Text('Row 2')),
-                            DataCell(Text('Row 1')),
-                          ],
-                        ),
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(Text('Row 2')),
-                            DataCell(Text('Row 2')),
-                            DataCell(Text('Row 1')),
-                          ],
-                        ),
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(Text('Row 2')),
-                            DataCell(Text('Row 2')),
-                            DataCell(Text('Row 1')),
-                          ],
-                        ),
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(Text('Row 2')),
-                            DataCell(Text('Row 2')),
-                            DataCell(Text('Row 1')),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
+                child: FutureBuilder<List<veterinarianRequestsModel>>(
+                  future: getVeterinarianRequest(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Hata: ${snapshot.error}');
+                    } else {
+                      final feedRequestsData = snapshot.data;
+                      return Column(
+                        children: <Widget>[
+                          ListTile(
+                            title: Text('Veteriner Taleplerim'),
+                            leading: Icon(Icons.medical_information),
+                            trailing: IconButton(
+                              icon: Icon(Icons.arrow_forward_ios),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => feedRequests()),
+                                );
+                              },
+                            ),
+                          ),
+                          DataTable(
+                            columns: const <DataColumn>[
+                              DataColumn(label: Text('Kod')),
+                              DataColumn(label: Text('Durum')),
+                            ],
+                            rows: List.generate(
+                              feedRequestsData!.length < 5 ? feedRequestsData.length : 5,
+                                  (index) {
+                                final request = feedRequestsData[index];
+                                return DataRow(
+                                  cells: <DataCell>[
+                                    DataCell(Text(request.situation)),
+                                    DataCell(Text(request.status)),
+                                    if(request.status == "a")
+                                      DataCell(Text("Aktif", style: TextStyle(color: Colors.red))
+                                      )
+                                    else if(request.status == "p")
+                                      DataCell(Text("Veteriner Yolda", style: TextStyle(color: Colors.green))
+                                      )
+                                        else
+                                          DataCell(Text(request.status)),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                  },
                 ),
               ),
             ],

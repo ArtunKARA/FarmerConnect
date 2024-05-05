@@ -1,3 +1,4 @@
+import 'package:farmerconnect/farmmer/mainScreenFarmer.dart';
 import 'package:farmerconnect/farmmer/veterinarian/veterinarianRequest.dart';
 import 'package:farmerconnect/user/user.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +51,7 @@ class feedRequests extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => feedRequests()),
+                  MaterialPageRoute(builder: (context) => mainScreenFarmer()),
                 );
               },
             ),
