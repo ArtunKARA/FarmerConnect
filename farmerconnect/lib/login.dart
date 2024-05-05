@@ -1,156 +1,146 @@
-import 'package:flutter/material.dart';
 import 'package:farmerconnect/signin.dart';
+import 'package:farmerconnect/widgets/form_container_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'firebase_auth_implementation/firebase_auth_services.dart';
+import 'global/toast.dart';
 
-class login extends StatelessWidget {
-  const login({Key? key});
+import 'home.dart';
+
+class Login extends StatefulWidget {
+  const Login({super.key});
+
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+
+  final FirebaseAuthService _auth = FirebaseAuthService();
+
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
+  bool _isSigningUp = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: [
-          Container(
-            height: double.infinity,
-            width: double.infinity,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(colors: [
-                Color(0xff2ECC71),
-                Color(0xff281537),
-              ]),
-            ),
-            child: const Padding(
-              padding: EdgeInsets.only(top: 60.0, left: 22),
-              child: Text(
-                '\nFarmerConnect',
-                style: TextStyle(
-                    fontSize: 30,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold),
+      appBar: AppBar(
+        title: Text("Giriş Yap"),
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Giriş Yap",
+                style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
               ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 200.0),
-            child: Container(
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(40),
-                    topRight: Radius.circular(40)),
-                color: Colors.white,
+              SizedBox(
+                height: 30,
               ),
-              height: double.infinity,
-              width: double.infinity,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 18.0, right: 18),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const TextField(
-                      decoration: InputDecoration(
-                          suffixIcon: Icon(
-                            Icons.mail,
-                            color: Colors.grey,
-                          ),
-                          label: Text(
-                            'E-Posta',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF27AE60),
-                            ),
-                          )),
-                    ),
-                    const TextField(
-                      obscureText: true,
-                      decoration: InputDecoration(
-                          suffixIcon: Icon(
-                            Icons.visibility_off,
-                            color: Colors.grey,
-                          ),
-                          label: Text(
-                            'Şifre',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF27AE60),
-                            ),
-                          )),
-                    ),
-                    const SizedBox(height: 20,),
-                    const Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        'Şifremi Unuttum',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 17,
-                          color: Color(0xff281537),
-                        ),
+              FormContainerWidget(
+                controller: _emailController,
+                hintText: "E-Posta",
+                isPasswordField: false,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              FormContainerWidget(
+                controller: _passwordController,
+                hintText: "Şifre",
+                isPasswordField: true,
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              GestureDetector(
+                onTap: _signIn,
+
+                child: Container(
+                  width: double.infinity,
+                  height: 45,
+                  decoration:
+                      BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                      color: Colors.green,
                       ),
-                    ),
-                    const SizedBox(height: 70,),
-                    Container(
-                      height: 55,
-                      width: 300,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        gradient: const LinearGradient(
-                            colors: [
-                              Color(0xff2ECC71),
-                              Color(0xff281537),
-                            ]
-                        ),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          'GİRİŞ YAP',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              color: Colors.white
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 150,),
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const SignIn()),
-                        );
-                      },
-                      child: const Align(
-                        alignment: Alignment.bottomRight,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              "Hesabınız Yok Mu?",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey
-                              ),
-                            ),
-                            Text(
-                              "Kayıt Ol",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 17,
-                                  color: Colors.black
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+                  child: Center(
+                      child: _isSigningUp ? CircularProgressIndicator(color: Colors.green,): Text(
+                    "Giriş Yap",
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  )),
                 ),
               ),
-            ),
+
+              SizedBox(height: 10,),
+
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Hesabınız Yok Mu?"),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => SignIn()),
+                        (route) => false,
+                      );
+                    },
+                    child: Text(
+                      "Kayıt Ol",
+                      style: TextStyle(
+                          color: Colors.green, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
+  }
+
+  void _signIn() async {
+
+    setState(() {
+      _isSigningUp = true;
+    });
+
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    User? user = await _auth.signInWithEmailAndPassword(email, password);
+
+    setState(() {
+      _isSigningUp = false;
+    });
+    if (user != null) {
+      showToast(message: "User is successfully logged in");
+      Navigator.pushNamed(context, "/home");
+    } else {
+      showToast(message: "Some error happened");
+    }
   }
 }

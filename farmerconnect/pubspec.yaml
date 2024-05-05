@@ -34,6 +34,8 @@ dependencies:
   firebase_auth: ^4.11.0
   firebase_storage: 11.7.4
   cloud_firestore: ^4.1.7
+  fluttertoast: ^8.2.5
+  font_awesome_flutter: ^10.6.0
   # Diğer Firebase eklentilerini buraya ekleyin
 
 

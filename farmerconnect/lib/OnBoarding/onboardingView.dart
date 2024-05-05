@@ -103,7 +103,7 @@ class _OnboardingViewState extends State<OnboardingView> {
             //After we press get started button this onboarding value become true
             // same key
             if(!mounted)return;
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const login()));
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const Login()));
           },
           child: const Text("Başlayın",style: TextStyle(color: Colors.white),)),
     );
