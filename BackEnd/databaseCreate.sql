@@ -7,7 +7,6 @@ CREATE TABLE Users (
     name nvarchar(50),
     surname nvarchar(50),
     telno nvarchar(10),
-    email nvarchar(50),
     farmName nvarchar(50),
     farmAdres nvarchar(250),
     area nvarchar(1) -- m marmara, e ege, k karadeniz
@@ -93,3 +92,7 @@ VALUES (1, N'Yonca', 10.00),
        (8, N'Kuru Küspe', 15.00),
        (9, N'Kuru Ot', 10.00),
        (10, N'Kuru Yonca', 25.00);
+
+INSERT INTO Users (ID, userName, mail, password, userType, name, surname, telno, farmName, farmAdres, area)
+VALUES 
+(1, 'arkara', 'artun@email.com', '123456', 'f', 'Artun', 'Kara', '5551234567', 'Artunun Çiftliği', 'Kocaeli, Türkiye', 'm');
