@@ -122,7 +122,26 @@ class mainScreenVeterinarian extends StatelessWidget {
                                             CrossAxisAlignment.start,
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
+                                              Text("Talep Tarihi: " + request.requestDate.substring(0,11)),
+                                              Text("Durum: " + request.status),
+                                              Text("Aciliyet Durumu: " + request.situation),
+                                              Text("Çiftlik Adresi: " + request.farmAdres),
+                                              ButtonBar(
+                                                children: [
+                                                  ElevatedButton(
+                                                    onPressed: () {
+                                                      // Veteriner çağır
+                                                      ScaffoldMessenger.of(context).showSnackBar(
+                                                        SnackBar(
+                                                          content: Text('İş üzerine alındı'),
+                                                        ),
+                                                      );
+                                                    },
+                                                    child: Text('ONAYLA'),
+                                                  ),
 
+                                                ],
+                                              ),
                                               // Diğer bilgiler buraya eklenebilir...
                                             ],
                                           ),
@@ -131,7 +150,7 @@ class mainScreenVeterinarian extends StatelessWidget {
                                     );
                                   },
                                   cells: <DataCell>[
-                                    DataCell(Text(request.requestDate.toString() ?? "Bekleniyor")),
+                                    DataCell(Text(request.requestDate.substring(0,11) ?? "Bekleniyor")),
                                     if (request.situation == "a")
                                       DataCell(Text("Acil", style: TextStyle(color: Colors.red)))
                                     else if (request.situation == "n")
