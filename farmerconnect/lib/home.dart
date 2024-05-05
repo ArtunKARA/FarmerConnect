@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'firebase_auth_implementation/firebase_auth_services.dart';
 import 'global/toast.dart';
 
 class HomePage extends StatefulWidget {
@@ -14,12 +15,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final FirebaseAuthService _auth = FirebaseAuthService();
+  var email = FirebaseAuth.instance.currentUser!.email;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: Text("Anasayfa"),
+          title: Text(email!),
         ),
         body: Center(
           child: Column(
