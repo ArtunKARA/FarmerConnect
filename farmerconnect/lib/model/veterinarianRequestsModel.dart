@@ -19,6 +19,7 @@ class veterinarianRequestsModel {
   String requestDate;
   String? diagnosis;
   String situation;
+  String farmAdres;
 
   veterinarianRequestsModel({
     required this.ID,
@@ -26,6 +27,7 @@ class veterinarianRequestsModel {
     required this.requestDate,
     required this.diagnosis,
     required this.situation,
+    required this.farmAdres,
   });
 
   factory veterinarianRequestsModel.fromJson(Map<String, dynamic> json) =>
@@ -35,6 +37,7 @@ class veterinarianRequestsModel {
         requestDate: json["requestDate"],
         diagnosis: json["diagnosis"],
         situation: json["situation"],
+          farmAdres : json["farmAdres"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -43,5 +46,6 @@ class veterinarianRequestsModel {
     "requestDate": requestDate,
     "diagnosis": diagnosis,
     "situation": situation,
+    "farmAdres": farmAdres,
   };
 }

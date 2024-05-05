@@ -30,6 +30,7 @@ class mainScreenVeterinarian extends StatelessWidget {
               requestDate : map["requestDate"],
               diagnosis : map["diagnosis"],
               situation : map["situation"],
+              farmAdres : map["farmAdres"],
           );
         }).toList();
       }
