@@ -4,6 +4,7 @@ const router = express.Router();
 const {
   getMedicineType,
   getFarmerMedicineData,
+  getAllMedicineRequests,
   getSupplierMedicineData,
   getMedicineDataDetails,
   setFarmerMedicineRequest,

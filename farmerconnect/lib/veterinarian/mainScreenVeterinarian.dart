@@ -125,7 +125,7 @@ class mainScreenVeterinarian extends StatelessWidget {
                                               Text("Talep Tarihi: " + request.requestDate.substring(0,11)),
                                               Text("Durum: " + request.status),
                                               Text("Aciliyet Durumu: " + request.situation),
-                                              Text("Çiftlik Adresi: " + request.farmAdres),
+                                              Text("Çiftlik Adresi: " + request.farmAdres!),
                                               ButtonBar(
                                                 children: [
                                                   ElevatedButton(
