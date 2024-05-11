@@ -42,8 +42,8 @@ class mainScreenSupplier extends StatelessWidget {
       throw Exception("Network Connectivity Error");
     }
     throw Exception("Fetch Data Error");
-
-  }Future<List<medicineRequestsModel>> getMedicineRequest() async {
+  }
+  Future<List<medicineRequestsModel>> getMedicineRequest() async {
     try {
       var email = FirebaseAuth.instance.currentUser!.email;
       final response = await http
