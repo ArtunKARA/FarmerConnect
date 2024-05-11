@@ -43,9 +43,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Giriş Yap"),
-      ),
+
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
