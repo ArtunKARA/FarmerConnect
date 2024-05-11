@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:farmerconnect/farmmer/veterinarian/veterinarianRequest.dart';
+import 'package:farmerconnect/farmmer/veterinarian/veterinarianRequests.dart';
 import 'package:farmerconnect/user/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -326,7 +327,7 @@ class mainScreenFarmer extends StatelessWidget {
                               onPressed: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => feedRequests()),
+                                  MaterialPageRoute(builder: (context) => veterinarianRequests()),
                                 );
                               },
                             ),
