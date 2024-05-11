@@ -13,6 +13,7 @@ import '../model/veterinarianRequestsModel.dart';
 import 'feed/feedRequest.dart';
 import 'feed/feedRequests.dart';
 import 'medicine/medicineRequest.dart';
+import 'medicine/medicineRequests.dart';
 
 class mainScreenFarmer extends StatelessWidget {
   const mainScreenFarmer({Key? key}) : super(key: key);
@@ -259,7 +260,7 @@ class mainScreenFarmer extends StatelessWidget {
                               onPressed: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => feedRequests()),
+                                  MaterialPageRoute(builder: (context) => medicineRequests()),
                                 );
                               },
                             ),
