@@ -13,6 +13,7 @@ import '../farmmer/medicine/medicineRequest.dart';
 import '../model/feedRequestsModel.dart';
 import '../model/medicineRequestsModel.dart';
 import '../model/veterinarianRequestsModel.dart';
+import 'feed/activeFeedRequest.dart';
 
 
 class mainScreenSupplier extends StatelessWidget {
@@ -22,7 +23,7 @@ class mainScreenSupplier extends StatelessWidget {
     try {
       var email = FirebaseAuth.instance.currentUser!.email;
       final response = await http
-          .get(Uri.parse("https://farmerconnect.azurewebsites.net/api/feed/farmer/artun@email.com"));
+          .get(Uri.parse("https://farmerconnect.azurewebsites.net/api/feed/supplier/" + email!));
       final body = json.decode(response.body) as List;
 
       if (response.statusCode == 200) {
@@ -41,12 +42,12 @@ class mainScreenSupplier extends StatelessWidget {
       throw Exception("Network Connectivity Error");
     }
     throw Exception("Fetch Data Error");
-
-  }Future<List<medicineRequestsModel>> getMedicineRequest() async {
+  }
+  Future<List<medicineRequestsModel>> getMedicineRequest() async {
     try {
       var email = FirebaseAuth.instance.currentUser!.email;
       final response = await http
-          .get(Uri.parse("https://farmerconnect.azurewebsites.net/api/medicine/farmer/artun@email.com"));
+          .get(Uri.parse("https://farmerconnect.azurewebsites.net/api/medicine/supplier/" + email!));
       final body = json.decode(response.body) as List;
 
       if (response.statusCode == 200) {
@@ -138,7 +139,7 @@ class mainScreenSupplier extends StatelessWidget {
                               onPressed: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => feedRequests()),
+                                  MaterialPageRoute(builder: (context) => activeFeedRequest()),
                                 );
                               },
                             ),

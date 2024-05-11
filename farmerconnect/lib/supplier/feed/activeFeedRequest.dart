@@ -2,25 +2,20 @@ import 'package:farmerconnect/farmmer/mainScreenFarmer.dart';
 import 'package:farmerconnect/farmmer/veterinarian/veterinarianRequest.dart';
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
 import '../../model/feedRequestsModel.dart';
-import '../medicine/medicineRequest.dart';
-import 'feedRequest.dart';
 import '../../user/user.dart';
 
-class feedRequests extends StatelessWidget {
-  const feedRequests({Key? key}) : super(key: key);
+class activeFeedRequest extends StatelessWidget {
+  const activeFeedRequest({Key? key}) : super(key: key);
 
   Future<List<feedRequestsModel>> getFeedRequest() async {
     try {
       var email = FirebaseAuth.instance.currentUser!.email;
       final response = await http.get(
-          Uri.parse("https://farmerconnect.azurewebsites.net/api/feed/farmer/" +
-              email!));
+          Uri.parse("https://farmerconnect.azurewebsites.net/api/feed/all/"));
       final body = json.decode(response.body) as List;
 
       if (response.statusCode == 200) {
@@ -91,7 +86,7 @@ class feedRequests extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xff2ECC71),
+        backgroundColor: const Color(0xFF3498DB),
         title: const Text(
           'FarmerConnect',
           style: TextStyle(color: Colors.white),
@@ -121,67 +116,6 @@ class feedRequests extends StatelessWidget {
           ),
         ],
       ),
-      drawer: Drawer(
-        width: 300,
-        child: ListView(
-          children: [
-            DrawerHeader(
-              child: Text(
-                "Hızlı Erişimler",
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              ),
-              decoration: BoxDecoration(
-                color: const Color(0xff2ECC71),
-              ),
-            ),
-            ListTile(
-              leading: Icon(Icons.home), // Yonca ikonu eklendi
-
-              title: const Text('Anasayfa'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => mainScreenFarmer()),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.rice_bowl), // Yonca ikonu eklendi
-
-              title: const Text('Yem Siparişi Ver'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => feedRequest()),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.medical_information), // Yonca ikonu eklendi
-
-              title: const Text('Veteriner Çağır'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => veterinarianRequest()),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.vaccines), // Yonca ikonu eklendi
-
-              title: const Text('İlaç Sipariş Et'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => medicineRequest()),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
@@ -209,7 +143,7 @@ class feedRequests extends StatelessWidget {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => feedRequests()),
+                                      builder: (context) => activeFeedRequest()),
                                 );
                               },
                             ),
@@ -230,23 +164,7 @@ class feedRequests extends StatelessWidget {
                                       context: context,
                                       builder: (BuildContext context) {
                                         Widget button;
-                                        if (request.Durum == "r") {
-                                          button = ElevatedButton(
-                                            onPressed: () {
-                                              // İptal et butonunun işlevselliği buraya yazılacak
-                                              getFeedCancel(request.TalepID.toString());
-                                              Navigator.pop(context);
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(builder: (context) => mainScreenFarmer()),
-                                              );
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.red, // Kırmızı renk
-                                            ),
-                                            child: Text('İptal Et', style: TextStyle(color: Colors.white)),
-                                          );
-                                        } else if (request.Durum == "s") {
+                                        if (request.Durum == "s") {
                                           button = ElevatedButton(
                                             onPressed: () {
                                               // Teslim aldım butonunun işlevselliği buraya yazılacak
@@ -254,7 +172,7 @@ class feedRequests extends StatelessWidget {
                                               Navigator.pop(context);
                                               Navigator.push(
                                                 context,
-                                                MaterialPageRoute(builder: (context) => mainScreenFarmer()),
+                                                MaterialPageRoute(builder: (context) => activeFeedRequest()),
                                               );
                                             },
                                             style: ElevatedButton.styleFrom(
