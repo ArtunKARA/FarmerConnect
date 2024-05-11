@@ -1,5 +1,6 @@
 import 'package:farmerconnect/farmmer/mainScreenFarmer.dart';
 import 'package:farmerconnect/farmmer/veterinarian/veterinarianRequest.dart';
+import 'package:farmerconnect/supplier/mainScreenSupplier.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -95,11 +96,14 @@ class activeFeedRequest extends StatelessWidget {
           builder: (BuildContext context) {
             return IconButton(
               icon: Icon(
-                Icons.menu,
+                Icons.arrow_back,
                 color: Colors.white,
               ),
               onPressed: () {
-                Scaffold.of(context).openDrawer();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => mainScreenSupplier()),
+                );
               },
             );
           },
@@ -164,7 +168,7 @@ class activeFeedRequest extends StatelessWidget {
                                       context: context,
                                       builder: (BuildContext context) {
                                         Widget button;
-                                        if (request.Durum == "s") {
+                                        if (request.Durum == "r") {
                                           button = ElevatedButton(
                                             onPressed: () {
                                               // Teslim aldım butonunun işlevselliği buraya yazılacak
@@ -178,7 +182,7 @@ class activeFeedRequest extends StatelessWidget {
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: Colors.green, // Yeşil renk
                                             ),
-                                            child: Text('Teslim Aldım', style: TextStyle(color: Colors.white)),
+                                            child: Text('Onayla', style: TextStyle(color: Colors.white)),
                                           );
                                         } else {
                                           // İptal et veya teslim aldım butonu olmayacaksa boş bir container döndür
@@ -199,7 +203,7 @@ class activeFeedRequest extends StatelessWidget {
                                               Text(
                                                   'Miktar: ${request.Miktar}'),
                                               Text(
-                                                  'Durum: ${request.Durum}'),
+                                                  'Durum: Tedarikte'),
                                               Text(
                                                   'Sipariş Tarihi: ${request.IstekTarihi}'),
                                               Text(
