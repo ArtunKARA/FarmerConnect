@@ -159,16 +159,6 @@ class veterinarianRequests extends StatelessWidget {
                           ListTile(
                             title: Text('Veteriner Taleplerim'),
                             leading: Icon(Icons.rice_bowl),
-                            trailing: IconButton(
-                              icon: Icon(Icons.arrow_forward_ios),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => veterinarianRequests()),
-                                );
-                              },
-                            ),
                           ),
                           DataTable(
                             columns: const <DataColumn>[
@@ -218,7 +208,7 @@ class veterinarianRequests extends StatelessWidget {
                                                   'Durum: Aktif',style: TextStyle(color: Colors.red),),
                                               if(request.status == "p")
                                                 Text(
-                                                  'Durum: Tedavi Uygulandı ',style: TextStyle(color: Colors.green),),
+                                                  'Durum: Veteriner Yolda ',style: TextStyle(color: Colors.green),),
                                               if(request.situation == "e")
                                                 Text(
                                                   'Kod: Acil ',style: TextStyle(color: Colors.red),),
@@ -246,7 +236,7 @@ class veterinarianRequests extends StatelessWidget {
                                     if (request.status == "a")
                                       DataCell(Text("Aktif", style: TextStyle(color: Colors.red)))
                                     else if (request.status == "p")
-                                      DataCell(Text("Veteriner Yolda", style: TextStyle(color: Colors.green)))
+                                      DataCell(Text("Tedavi Edildi", style: TextStyle(color: Colors.green)))
                                     else
                                       DataCell(Text(request.status)),
                                     DataCell(Text(request.diagnosis ?? ''))

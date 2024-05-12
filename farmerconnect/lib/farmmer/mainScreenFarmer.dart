@@ -16,6 +16,7 @@ import 'feed/feedRequests.dart';
 import 'medicine/medicineRequest.dart';
 import 'medicine/medicineRequests.dart';
 
+
 class mainScreenFarmer extends StatelessWidget {
   const mainScreenFarmer({Key? key}) : super(key: key);
 
@@ -343,7 +344,7 @@ class mainScreenFarmer extends StatelessWidget {
                                 final request = lastFiveRequests[index];
                                 return DataRow(
                                   cells: <DataCell>[
-                                    if (request.situation == "a")
+                                    if (request.situation == "e")
                                       DataCell(Text("Acil", style: TextStyle(color: Colors.red)))
                                     else if (request.situation == "n")
                                       DataCell(Text("Stabil", style: TextStyle(color: Colors.green)))
@@ -352,7 +353,7 @@ class mainScreenFarmer extends StatelessWidget {
                                     if (request.status == "a")
                                       DataCell(Text("Aktif", style: TextStyle(color: Colors.red)))
                                     else if (request.status == "p")
-                                      DataCell(Text("Veteriner Yolda", style: TextStyle(color: Colors.green)))
+                                      DataCell(Text("Tedavi Edildi", style: TextStyle(color: Colors.green)))
                                     else
                                       DataCell(Text(request.status)),
                                   ],
