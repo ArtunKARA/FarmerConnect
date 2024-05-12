@@ -9,29 +9,35 @@ import 'package:http/http.dart' as http;
 
 import '../../model/feedRequestsModel.dart';
 import '../../user/user.dart';
-import 'allVeterinarianRequests.dart';
+import 'mainScreenVeterinarian.dart';
 
-class mainScreenVeterinarian extends StatelessWidget {
-  const mainScreenVeterinarian({Key? key}) : super(key: key);
 
+class AllVeterinarianRequests extends StatefulWidget {
+  const AllVeterinarianRequests({Key? key}) : super(key: key);
+
+  @override
+  _AllVeterinarianRequestsState createState() => _AllVeterinarianRequestsState();
+}
+
+
+class _AllVeterinarianRequestsState extends State<AllVeterinarianRequests> {
   Future<List<veterinarianRequestsModel>> getVeterianRequest() async {
     try {
       var email = FirebaseAuth.instance.currentUser!.email;
       final response = await http.get(
-          Uri.parse("https://farmerconnect.azurewebsites.net/api/veterinarian/veterinarian/" +
-              email!));
+          Uri.parse("https://farmerconnect.azurewebsites.net/api/veterinarian/all"));
       final body = json.decode(response.body) as List;
 
       if (response.statusCode == 200) {
         return body.map((e) {
           final map = e as Map<String, dynamic>;
           return veterinarianRequestsModel(
-              ID : map["ID"],
-              status : map["status"],
-              requestDate : map["requestDate"],
-              diagnosis : map["diagnosis"],
-              situation : map["situation"],
-              farmAdres : map["farmAdres"],
+            ID : map["ID"],
+            status : map["status"],
+            requestDate : map["requestDate"],
+            diagnosis : map["diagnosis"],
+            situation : map["situation"],
+            farmAdres : map["farmAdres"],
           );
         }).toList();
       }
@@ -43,6 +49,7 @@ class mainScreenVeterinarian extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    DateTime now = DateTime.now();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFD2B48C),
@@ -94,18 +101,19 @@ class mainScreenVeterinarian extends StatelessWidget {
                       return Column(
                         children: <Widget>[
                           ListTile(
-                            title: Text('Üzerimdeki İstekler'),
-                            leading: Icon(Icons.request_page_outlined),
+                            title: Text('Açık Tüm İstekler'),
+                            leading: Icon(Icons.medical_services),
                             trailing: IconButton(
-                              icon: Icon(Icons.arrow_forward_ios),
+                              icon: Icon(Icons.arrow_back_ios),
                               onPressed: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => AllVeterinarianRequests()),
+                                  MaterialPageRoute(builder: (context) => mainScreenVeterinarian()),
                                 );
                               },
                             ),
                           ),
+
                           DataTable(
                             columns: const <DataColumn>[
                               DataColumn(label: Text('Talep Tarihi')),
@@ -136,20 +144,29 @@ class mainScreenVeterinarian extends StatelessWidget {
                                               Text("Çiftlik Adresi: " + request.farmAdres!),
                                               Text("Teşhis: ${request.diagnosis}" ?? "Bekleniyor"),
                                               if(request.status == "a")
-                                                TextFormField(
-                                                  decoration: InputDecoration(
-                                                    labelText: 'Tanı',
-                                                    hintText: 'Tanı giriniz',
-                                                  ),
+                                                Text("Tarih: " + now.toString().substring(0,11)),
+                                              if(request.status == "a")
+                                                ElevatedButton(
+                                                    child: const Text('Gidilecek Tarihi Giriniz'),
+                                                    onPressed: () async {
+                                                      final DateTime? date = await showDatePicker(
+                                                        context: context,
+                                                        initialDate: DateTime.now(),
+                                                        firstDate: DateTime(2000),
+                                                        lastDate: DateTime(2025),
+                                                      );
+                                                      if(date != null){
+                                                        now = date;
+                                                      }
+                                                    }
                                                 ),
                                               ButtonBar(
                                                 children: [
                                                   if(request.status == "a")
                                                     ElevatedButton(
                                                       onPressed: () {
-
                                                       },
-                                                      child: Text("Tedavi Edildi"),
+                                                      child: Text("İşi üsütüme al"),
                                                     ),
                                                 ],
                                               ),
