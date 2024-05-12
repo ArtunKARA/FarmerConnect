@@ -34,9 +34,7 @@ class veterinarianRequests extends StatelessWidget {
               status: map['status'],
               requestDate: map["requestDate"],
               diagnosis: map["diagnosis"],
-              situation: map["situation"],
-              farmAdres: map["farmAdres"],
-          );
+              situation: map["situation"]);
         }).toList();
       }
     } on SocketException {
@@ -127,7 +125,7 @@ class veterinarianRequests extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: Icon(Icons.vaccines),
+              leading: Icon(Icons.vaccines), // Yonca ikonu eklendi
 
               title: const Text('İlaç Sipariş Et'),
               onTap: () {
@@ -174,8 +172,8 @@ class veterinarianRequests extends StatelessWidget {
                           ),
                           DataTable(
                             columns: const <DataColumn>[
-                              DataColumn(label: Text('Durum')),
                               DataColumn(label: Text('Kod')),
+                              DataColumn(label: Text('Durum')),
                               DataColumn(label: Text('Teşhis')),
                             ],
                             rows: List.generate(
@@ -216,16 +214,16 @@ class veterinarianRequests extends StatelessWidget {
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               if(request.status == "a")
-                                              Text(
+                                                Text(
                                                   'Durum: Aktif',style: TextStyle(color: Colors.red),),
                                               if(request.status == "p")
-                                              Text(
+                                                Text(
                                                   'Durum: Tedavi Uygulandı ',style: TextStyle(color: Colors.green),),
                                               if(request.situation == "e")
-                                              Text(
+                                                Text(
                                                   'Kod: Acil ',style: TextStyle(color: Colors.red),),
                                               if(request.situation == "n")
-                                              Text(
+                                                Text(
                                                   'Kod: Stabil ',style: TextStyle(color: Colors.yellow),),
 
                                               Text(
@@ -239,23 +237,19 @@ class veterinarianRequests extends StatelessWidget {
                                     );
                                   },
                                   cells: <DataCell>[
-                                    DataCell(Text(request.situation)),
-                                    DataCell(Text(request.status)),
-                                    if (request.status == "a")
-                                      DataCell(Text("Aktif",
-                                          style: TextStyle(color: Colors.red))),
-                                    if (request.status == "p")
-                                      DataCell(Text("Tedavi Uygulandı",
-                                          style: TextStyle(color: Colors.green))),
                                     if (request.situation == "e")
-                                      DataCell(Text("Acil",
-                                          style: TextStyle(color: Colors.red))),
-                                    if (request.status == "n")
-                                      DataCell(Text("Stabil",
-                                          style: TextStyle(color: Colors.yellow))),
-                                    if (request.status != "a" &&
-                                        request.status != "p")
+                                      DataCell(Text("Acil", style: TextStyle(color: Colors.red)))
+                                    else if (request.situation == "n")
+                                      DataCell(Text("Stabil", style: TextStyle(color: Colors.green)))
+                                    else
                                       DataCell(Text(request.status)),
+                                    if (request.status == "a")
+                                      DataCell(Text("Aktif", style: TextStyle(color: Colors.red)))
+                                    else if (request.status == "p")
+                                      DataCell(Text("Veteriner Yolda", style: TextStyle(color: Colors.green)))
+                                    else
+                                      DataCell(Text(request.status)),
+                                    DataCell(Text(request.diagnosis ?? ''))
                                   ],
                                 );
                               },
