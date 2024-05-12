@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import '../../model/feedModel.dart';
+import '../../model/medicineModel.dart';
 
 
 class medicineRequest extends StatefulWidget {
@@ -15,7 +16,7 @@ class medicineRequest extends StatefulWidget {
 }
 
 class _medicineRequestState extends State<medicineRequest> {
-  Future<List<feedModel>> getPost() async {
+  Future<List<medicineModel>> getPost() async {
     try {
       final response = await http
           .get(Uri.parse("https://farmerconnect.azurewebsites.net/api/medicine/type"));
@@ -24,7 +25,7 @@ class _medicineRequestState extends State<medicineRequest> {
       if (response.statusCode == 200) {
         return body.map((e) {
           final map = e as Map<String, dynamic>;
-          return feedModel(
+          return medicineModel(
               ID: map["ID"], name: map['name'], price: map["price"]);
         }).toList();
       }
@@ -32,6 +33,40 @@ class _medicineRequestState extends State<medicineRequest> {
       throw Exception("Network Connectivity Error");
     }
     throw Exception("Fetch Data Error");
+  }
+
+  Future<void> postMedicineRequest(mail,medicineTypeID, amount) async {
+    // Göndermek istediğiniz verileri bir harita olarak oluşturun
+    Map<String, dynamic> data = {
+      'mail': mail,
+      'medicineTypeID': medicineTypeID,
+      'amount': amount,
+    };
+
+    // Verileri JSON formatına dönüştürün
+    String jsonData = json.encode(data);
+
+    try {
+      // POST isteğini göndermek istediğiniz URL'yi belirtin
+      final response = await http.post(
+        Uri.parse('https://farmerconnect.azurewebsites.net/api/medicine/farmerRequest'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        // Veriyi JSON formatında gönderin
+        body: jsonData,
+      );
+
+      // Yanıtın durumunu kontrol edin
+      if (response.statusCode == 200) {
+        print('Veri başarıyla gönderildi');
+        print('Sunucu yanıtı: ${response.body}');
+      } else {
+        print('Veri gönderilirken bir hata oluştu: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print('İstek sırasında bir hata oluştu: $e');
+    }
   }
 
   var selectedValue;
@@ -55,7 +90,7 @@ class _medicineRequestState extends State<medicineRequest> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  FutureBuilder<List<feedModel>>(
+                  FutureBuilder<List<medicineModel>>(
                       future: getPost(),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
@@ -73,7 +108,7 @@ class _medicineRequestState extends State<medicineRequest> {
                                 );
                               }).toList(), // Change this to toList()
                               onChanged: (value) {
-                                priceInt = snapshot.data!.firstWhere((element) => element.ID.toString() == value).price;
+                                priceInt = snapshot.data!.firstWhere((element) => element.ID.toString() == value).price.toInt();
                                 print(priceInt);
                                 setState(() {
                                   selectedValue = value;
@@ -134,7 +169,36 @@ class _medicineRequestState extends State<medicineRequest> {
                 backgroundColor: Color(0xff2ECC71),
               ),
               onPressed: () {
-                // Butona basıldığında yapılacak işlemler
+                if(selectedValue == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Lütfen yem türü seçiniz!'),
+                    ),
+                  );
+                  return;
+                } else if(pieceController.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Lütfen kilogram giriniz!'),
+                    ),
+                  );
+                  return;
+                } else if(price == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Fiyat hesaplanırken bir hata oluştu!'),
+                    ),
+                  );
+                  return;
+                } else {
+                  var email = FirebaseAuth.instance.currentUser!.email;
+                  postMedicineRequest(email,selectedValue, pieceController.text);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Talep oluşturuldu!'),
+                    ),
+                  );
+                }
               },
               child: Text("Talep Oluştur",
                   style: TextStyle(color: Colors.white)

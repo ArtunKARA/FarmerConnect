@@ -42,6 +42,51 @@ class medicineRequests extends StatelessWidget {
     throw Exception("Fetch Data Error");
   }
 
+  Future<void> getMedicineDelivered(feedRequestID) async {
+    try {
+      // POST isteğini göndermek istediğiniz URL'yi belirtin
+      final response = await http.get(
+        Uri.parse('https://farmerconnect.azurewebsites.net/api/medicine/farmerRequestDelivered/'+ feedRequestID),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      // Yanıtın durumunu kontrol edin
+      if (response.statusCode == 200) {
+        print('Veri başarıyla gönderildi');
+        print('Sunucu yanıtı: ${response.body}');
+      } else {
+        print('Veri gönderilirken bir hata oluştu: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print('İstek sırasında bir hata oluştu: $e');
+    }
+  }
+
+  Future<void> getMedicineCancel(feedRequestID) async {
+    try {
+      // POST isteğini göndermek istediğiniz URL'yi belirtin
+      final response = await http.get(
+        Uri.parse('https://farmerconnect.azurewebsites.net/api/medicine/farmerRequestCanceled/' + feedRequestID),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        // Veriyi JSON formatında gönderin
+      );
+
+      // Yanıtın durumunu kontrol edin
+      if (response.statusCode == 200) {
+        print('Veri başarıyla gönderildi');
+        print('Sunucu yanıtı: ${response.body}');
+      } else {
+        print('Veri gönderilirken bir hata oluştu: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print('İstek sırasında bir hata oluştu: $e');
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -152,7 +197,7 @@ class medicineRequests extends StatelessWidget {
                     } else if (snapshot.hasError) {
                       return Text('Hata: ${snapshot.error}');
                     } else {
-                      final feedRequestsData = snapshot.data;
+                      final feedRequestsData = List.from(snapshot.data!.reversed);
                       return Column(
                         children: <Widget>[
                           ListTile(
@@ -176,9 +221,7 @@ class medicineRequests extends StatelessWidget {
                               DataColumn(label: Text('Durum')),
                             ],
                             rows: List.generate(
-                              feedRequestsData!.length < 5
-                                  ? feedRequestsData.length
-                                  : 5,
+                              feedRequestsData!.length,
                                   (index) {
                                 final request = feedRequestsData[index];
                                 return DataRow(
@@ -190,7 +233,12 @@ class medicineRequests extends StatelessWidget {
                                         if (request.status == "r") {
                                           button = ElevatedButton(
                                             onPressed: () {
-                                              // İptal et butonunun işlevselliği buraya yazılacak
+                                              getMedicineCancel(request.ID.toString());
+                                              Navigator.pop(context);
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(builder: (context) => mainScreenFarmer()),
+                                              );
                                             },
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: Colors.red, // Kırmızı renk
@@ -200,7 +248,12 @@ class medicineRequests extends StatelessWidget {
                                         } else if (request.status == "s") {
                                           button = ElevatedButton(
                                             onPressed: () {
-                                              // Teslim aldım butonunun işlevselliği buraya yazılacak
+                                              getMedicineDelivered(request.ID.toString());
+                                              Navigator.pop(context);
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(builder: (context) => mainScreenFarmer()),
+                                              );
                                             },
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: Colors.green, // Yeşil renk

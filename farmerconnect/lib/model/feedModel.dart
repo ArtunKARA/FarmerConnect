@@ -14,7 +14,7 @@ String dropdownItemsModelToJson(List<feedModel> data) =>
 class feedModel {
   int ID;
   String name;
-  int price;
+  double price;
 
   feedModel({
     required this.ID,

@@ -74,7 +74,7 @@ class _feedRequestState extends State<feedRequest> {
   TextEditingController kilogramController = TextEditingController();
   String? price;
   var selectedValue;
-  int? priceInt;
+  double? priceInt;
 
   @override
   void initState() {

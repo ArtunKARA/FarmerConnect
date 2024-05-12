@@ -89,7 +89,7 @@ class _ComboBoxPageState extends State<veterinarianRequest> {
                 var email = FirebaseAuth.instance.currentUser!.email;
                 if (_selectedItem != null) {
                   if(_selectedItem == 'Acil'){
-                    postVeterianRequest(email,"a");
+                    postVeterianRequest(email,"e");
                     // Acil durumda veteriner çağır
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(

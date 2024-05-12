@@ -43,6 +43,29 @@ class veterinarianRequests extends StatelessWidget {
     throw Exception("Fetch Data Error");
   }
 
+  Future<void> getVeterinarianCancel(RequestID) async {
+    try {
+      // POST isteğini göndermek istediğiniz URL'yi belirtin
+      final response = await http.get(
+        Uri.parse('https://farmerconnect.azurewebsites.net/api/veterinarian/veterinarianRequestCanceled/' + RequestID),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        // Veriyi JSON formatında gönderin
+      );
+
+      // Yanıtın durumunu kontrol edin
+      if (response.statusCode == 200) {
+        print('Veri başarıyla gönderildi');
+        print('Sunucu yanıtı: ${response.body}');
+      } else {
+        print('Veri gönderilirken bir hata oluştu: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print('İstek sırasında bir hata oluştu: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -153,7 +176,7 @@ class veterinarianRequests extends StatelessWidget {
                     } else if (snapshot.hasError) {
                       return Text('Hata: ${snapshot.error}');
                     } else {
-                      final veterinarianRequestsData = snapshot.data;
+                      final veterinarianRequestsData = List.from(snapshot.data!.reversed);
                       return Column(
                         children: <Widget>[
                           ListTile(
@@ -167,9 +190,7 @@ class veterinarianRequests extends StatelessWidget {
                               DataColumn(label: Text('Teşhis')),
                             ],
                             rows: List.generate(
-                              veterinarianRequestsData!.length < 5
-                                  ? veterinarianRequestsData.length
-                                  : 5,
+                              veterinarianRequestsData!.length,
                                   (index) {
                                 final request = veterinarianRequestsData[index];
                                 return DataRow(
@@ -181,7 +202,12 @@ class veterinarianRequests extends StatelessWidget {
                                         if (request.status == "a") {
                                           button = ElevatedButton(
                                             onPressed: () {
-                                              // İptal et butonunun işlevselliği buraya yazılacak
+                                              getVeterinarianCancel(request.ID.toString());
+                                              Navigator.pop(context);
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(builder: (context) => mainScreenFarmer()),
+                                              );
                                             },
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: Colors.red, // Kırmızı renk

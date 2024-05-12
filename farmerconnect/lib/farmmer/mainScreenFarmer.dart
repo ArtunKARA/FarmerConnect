@@ -33,7 +33,7 @@ class mainScreenFarmer extends StatelessWidget {
           return feedRequestsModel(
               TalepID: map["TalepID"],
               YemAdi: map['YemAdı'],
-              Miktar: map["Miktar"],
+              Miktar: map["Miktar"].toDouble(),
               Durum: map["Durum"],
               IstekTarihi: map["IstekTarihi"],
               TeslimTarihi: map["TeslimTarihi"]);

@@ -16,7 +16,7 @@ String dropdownItemsModelToJson(List<feedRequestsModel> data) =>
 class feedRequestsModel {
   int TalepID;
   String YemAdi;
-  int Miktar;
+  double Miktar;
   String Durum;
   String IstekTarihi;
   String? TeslimTarihi;
