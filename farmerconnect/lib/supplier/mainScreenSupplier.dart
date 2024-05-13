@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:farmerconnect/farmmer/veterinarian/veterinarianRequest.dart';
+import 'package:farmerconnect/supplier/medicine/activeMedicineRequest.dart';
 import 'package:farmerconnect/user/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class mainScreenSupplier extends StatelessWidget {
           return feedRequestsModel(
               TalepID: map["TalepID"],
               YemAdi: map['YemAdı'],
-              Miktar: map["Miktar"],
+              Miktar: map["Miktar"].toDouble(),
               Durum: map["Durum"],
               IstekTarihi: map["IstekTarihi"],
               TeslimTarihi: map["TeslimTarihi"]);
@@ -199,13 +200,13 @@ class mainScreenSupplier extends StatelessWidget {
                         children: <Widget>[
                           ListTile(
                             title: Text('İlaç Sipariş İstekleri'),
-                            leading: Icon(Icons.rice_bowl),
+                            leading: Icon(Icons.medical_information),
                             trailing: IconButton(
                               icon: Icon(Icons.arrow_forward_ios),
                               onPressed: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => feedRequests()),
+                                  MaterialPageRoute(builder: (context) => activeMedicineRequest()),
                                 );
                               },
                             ),

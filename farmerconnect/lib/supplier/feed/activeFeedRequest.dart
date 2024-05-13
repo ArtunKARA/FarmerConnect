@@ -25,7 +25,7 @@ class activeFeedRequest extends StatelessWidget {
           return feedRequestsModel(
               TalepID: map["TalepID"],
               YemAdi: map['YemAdı'],
-              Miktar: map["Miktar"],
+              Miktar: map["Miktar"].toDouble(),
               Durum: map["Durum"],
               IstekTarihi: map["IstekTarihi"],
               TeslimTarihi: map["TeslimTarihi"]);
@@ -37,37 +37,26 @@ class activeFeedRequest extends StatelessWidget {
     throw Exception("Fetch Data Error");
   }
 
-  Future<void> getFeedDelivered(feedRequestID) async {
+  Future<void> postFeedRequestSupply(id,deliveryDate,mail) async {
+    // Göndermek istediğiniz verileri bir harita olarak oluşturun
+    Map<String, dynamic> data = {
+      'id': id,
+      'deliveryDate': deliveryDate,
+      'mail': mail,
+    };
+
+    // Verileri JSON formatına dönüştürün
+    String jsonData = json.encode(data);
+
     try {
       // POST isteğini göndermek istediğiniz URL'yi belirtin
-      final response = await http.get(
-        Uri.parse('https://farmerconnect.azurewebsites.net/api/feed/farmerRequestDelivered/'+ feedRequestID),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-      );
-      // Yanıtın durumunu kontrol edin
-      if (response.statusCode == 200) {
-        print('Veri başarıyla gönderildi');
-        print('Sunucu yanıtı: ${response.body}');
-      } else {
-        print('Veri gönderilirken bir hata oluştu: ${response.reasonPhrase}');
-      }
-    } catch (e) {
-      print('İstek sırasında bir hata oluştu: $e');
-    }
-  }
-
-
-  Future<void> getFeedCancel(feedRequestID) async {
-    try {
-      // POST isteğini göndermek istediğiniz URL'yi belirtin
-      final response = await http.get(
-        Uri.parse('https://farmerconnect.azurewebsites.net/api/feed/farmerRequestCanceled/' + feedRequestID),
+      final response = await http.post(
+        Uri.parse('https://farmerconnect.azurewebsites.net/api/feed/supplierRequestSupply'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
         // Veriyi JSON formatında gönderin
+        body: jsonData,
       );
 
       // Yanıtın durumunu kontrol edin
@@ -82,9 +71,9 @@ class activeFeedRequest extends StatelessWidget {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
+    DateTime now = DateTime.now();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFF3498DB),
@@ -142,12 +131,12 @@ class activeFeedRequest extends StatelessWidget {
                             title: Text('Yem Siparişlerim'),
                             leading: Icon(Icons.rice_bowl),
                             trailing: IconButton(
-                              icon: Icon(Icons.arrow_forward_ios),
+                              icon: Icon(Icons.arrow_back_ios),
                               onPressed: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => activeFeedRequest()),
+                                      builder: (context) => mainScreenSupplier()),
                                 );
                               },
                             ),
@@ -169,20 +158,41 @@ class activeFeedRequest extends StatelessWidget {
                                       builder: (BuildContext context) {
                                         Widget button;
                                         if (request.Durum == "r") {
-                                          button = ElevatedButton(
-                                            onPressed: () {
-                                              // Teslim aldım butonunun işlevselliği buraya yazılacak
-                                              getFeedDelivered(request.TalepID.toString());
-                                              Navigator.pop(context);
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(builder: (context) => activeFeedRequest()),
-                                              );
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.green, // Yeşil renk
-                                            ),
-                                            child: Text('Onayla', style: TextStyle(color: Colors.white)),
+                                          button = Column(
+                                            children: [
+                                              if(request.Durum == "r")
+                                                Text("Gidilecek Tarih: " + now.toString().substring(0,11)),
+                                              if(request.Durum == "r")
+                                                ElevatedButton(
+                                                    child: const Text('Teslimat Tarihi Giriniz'),
+                                                    onPressed: () async {
+                                                      final DateTime? date = await showDatePicker(
+                                                        context: context,
+                                                        initialDate: DateTime.now(),
+                                                        firstDate: DateTime(2000),
+                                                        lastDate: DateTime(2025),
+                                                      );
+                                                      if(date != null){
+                                                        now = date;
+                                                      }
+                                                    }
+                                                ),
+                                              ButtonBar(
+                                                children: [
+                                                  if(request.Durum == "r")
+                                                    ElevatedButton(
+                                                      onPressed: () {
+                                                        postFeedRequestSupply(request.TalepID, now.toString().substring(0,11), FirebaseAuth.instance.currentUser!.email.toString());
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(builder: (context) => mainScreenSupplier()),
+                                                        );
+                                                      },
+                                                      child: Text("Siparişi üsütüme al"),
+                                                    ),
+                                                ],
+                                              ),
+                                            ],
                                           );
                                         } else {
                                           // İptal et veya teslim aldım butonu olmayacaksa boş bir container döndür

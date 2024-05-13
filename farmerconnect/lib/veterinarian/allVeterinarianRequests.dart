@@ -47,7 +47,40 @@ class _AllVeterinarianRequestsState extends State<AllVeterinarianRequests> {
     throw Exception("Fetch Data Error");
   }
 
-  @override
+  Future<void> postVeterianAproved(mail,id) async {
+    // Göndermek istediğiniz verileri bir harita olarak oluşturun
+    Map<String, dynamic> data = {
+      'mail': mail,
+      'id': id,
+    };
+
+    // Verileri JSON formatına dönüştürün
+    String jsonData = json.encode(data);
+
+    try {
+      // POST isteğini göndermek istediğiniz URL'yi belirtin
+      final response = await http.post(
+        Uri.parse('https://farmerconnect.azurewebsites.net/api/veterinarian/veterinarianRequestAproved'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        // Veriyi JSON formatında gönderin
+        body: jsonData,
+      );
+
+      // Yanıtın durumunu kontrol edin
+      if (response.statusCode == 200) {
+        print('Veri başarıyla gönderildi');
+        print('Sunucu yanıtı: ${response.body}');
+      } else {
+        print('Veri gönderilirken bir hata oluştu: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print('İstek sırasında bir hata oluştu: $e');
+    }
+  }
+
+      @override
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
     return Scaffold(
@@ -143,33 +176,42 @@ class _AllVeterinarianRequestsState extends State<AllVeterinarianRequests> {
                                               Text("Aciliyet Durumu: " + (request.situation == "e" ? "Acil" : "Stabil")),
                                               Text("Çiftlik Adresi: " + request.farmAdres!),
                                               Text("Teşhis: ${request.diagnosis}" ?? "Bekleniyor"),
-                                              if(request.status == "a")
-                                                Text("Tarih: " + now.toString().substring(0,11)),
-                                              if(request.status == "a")
-                                                ElevatedButton(
-                                                    child: const Text('Gidilecek Tarihi Giriniz'),
-                                                    onPressed: () async {
-                                                      final DateTime? date = await showDatePicker(
-                                                        context: context,
-                                                        initialDate: DateTime.now(),
-                                                        firstDate: DateTime(2000),
-                                                        lastDate: DateTime(2025),
-                                                      );
-                                                      if(date != null){
-                                                        now = date;
-                                                      }
-                                                    }
-                                                ),
-                                              ButtonBar(
+                                              Column(
                                                 children: [
                                                   if(request.status == "a")
+                                                    Text("Gidilecek Tarih: " + now.toString().substring(0,11)),
+                                                  if(request.status == "a")
                                                     ElevatedButton(
-                                                      onPressed: () {
-                                                      },
-                                                      child: Text("İşi üsütüme al"),
+                                                        child: const Text('Gidilecek Tarihi Giriniz'),
+                                                        onPressed: () async {
+                                                          final DateTime? date = await showDatePicker(
+                                                            context: context,
+                                                            initialDate: DateTime.now(),
+                                                            firstDate: DateTime(2000),
+                                                            lastDate: DateTime(2025),
+                                                          );
+                                                          if(date != null){
+                                                            now = date;
+                                                          }
+                                                        }
                                                     ),
+                                                  ButtonBar(
+                                                    children: [
+                                                      if(request.status == "a")
+                                                        ElevatedButton(
+                                                          onPressed: () {
+                                                            postVeterianAproved(FirebaseAuth.instance.currentUser!.email,request.ID);
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(builder: (context) => mainScreenVeterinarian()),
+                                                            );
+                                                          },
+                                                          child: Text("İşi üsütüme al"),
+                                                        ),
+                                                    ],
+                                                  ),
                                                 ],
-                                              ),
+                                              )
                                               // Diğer bilgiler buraya eklenebilir...
                                             ],
                                           ),
