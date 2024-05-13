@@ -116,7 +116,7 @@ class _feedRequestState extends State<feedRequest> {
                                 );
                               }).toList(), // Change this to toList()
                               onChanged: (value) {
-                                priceInt = snapshot.data!.firstWhere((element) => element.ID.toString() == value).price;
+                                priceInt = snapshot.data!.firstWhere((element) => element.ID.toString() == value).price.toDouble();
                                 print(priceInt);
                                 setState(() {
                                   selectedValue = value;
